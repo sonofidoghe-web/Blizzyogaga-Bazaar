@@ -315,6 +315,38 @@
   .billing-form .bf-check{ display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--ink-soft); margin:14px 0; }
   .acc-error{ color:#C0455A; font-size:12px; margin:-10px 0 14px; }
 
+  /* live product grid, populated from Firestore once the admin adds products */
+  .product-grid{
+    display:grid; grid-template-columns:1fr 1fr; gap:14px; padding:16px 18px 6px;
+  }
+  .pcard{
+    background:var(--white); border:1px solid var(--line); border-radius:var(--radius);
+    overflow:hidden; position:relative;
+  }
+  .pcard .pc-img{ width:100%; aspect-ratio:1/1; object-fit:cover; background:var(--cream-deep); display:block; }
+  .pcard .pc-body{ padding:10px 12px 12px; }
+  .pcard .pc-name{ font-size:12.5px; font-weight:600; line-height:1.3; margin-bottom:3px; }
+  .pcard .pc-cat{ font-size:11px; color:var(--ink-soft); margin-bottom:5px; }
+  .pcard .pc-price{ font-size:13px; font-weight:700; color:var(--gold-deep); }
+  .pcard .pc-sold{
+    position:absolute; top:8px; left:8px; background:var(--ink); color:#fff; font-size:9.5px;
+    font-weight:700; letter-spacing:.03em; padding:3px 7px; border-radius:4px;
+  }
+  .pc-heart{
+    position:absolute; top:8px; right:8px; width:28px; height:28px; border-radius:50%;
+    background:rgba(255,255,255,.9); border:none; display:flex; align-items:center; justify-content:center;
+    cursor:pointer; color:var(--ink);
+  }
+  .pc-heart.active{ color:#C0455A; }
+  .pc-heart svg{ width:15px; height:15px; }
+  .pc-heart.active svg{ fill:#C0455A; }
+  .pc-cart{
+    width:100%; margin-top:8px; background:var(--ink); color:#fff; border:none; border-radius:6px;
+    padding:8px; font-size:11.5px; font-weight:700; letter-spacing:.02em; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; gap:6px;
+  }
+  .pc-cart:disabled{ background:#D8CDB6; cursor:not-allowed; }
+
   /* pagination, present but inert until products exist */
   .pagination{
     display:flex; align-items:center; justify-content:center; gap:6px;
@@ -403,32 +435,32 @@
     </a>
   </div>
   <div class="drawer-pane" id="dpane-cat">
-    <div class="drow" onclick="closeDrawer(); toggleCatPanel(true);">Adult Toys</div>
-    <div class="drow" onclick="closeDrawer(); toggleCatPanel(true);">Bag</div>
-    <div class="drow" onclick="closeDrawer(); toggleCatPanel(true);">Body Care</div>
-    <div class="drow" onclick="closeDrawer(); toggleCatPanel(true);">Children Items</div>
-    <div class="drow" onclick="closeDrawer(); toggleCatPanel(true);">Clock</div>
-    <div class="drow" onclick="closeDrawer(); toggleCatPanel(true);">Clothes</div>
-    <div class="drow" onclick="closeDrawer(); toggleCatPanel(true);">Diffuser/Humidifier</div>
-    <div class="drow" onclick="closeDrawer(); toggleCatPanel(true);">Gadgets</div>
-    <div class="drow" onclick="closeDrawer(); toggleCatPanel(true);">Gift Set</div>
-    <div class="drow" onclick="closeDrawer(); toggleCatPanel(true);">Gummies</div>
-    <div class="drow" onclick="closeDrawer(); toggleCatPanel(true);">Headphone</div>
-    <div class="drow" onclick="closeDrawer(); toggleCatPanel(true);">Nails</div>
-    <div class="drow" onclick="closeDrawer(); toggleCatPanel(true);">Perfume</div>
-    <div class="drow" onclick="closeDrawer(); toggleCatPanel(true);">Powerbank</div>
-    <div class="drow" onclick="closeDrawer(); toggleCatPanel(true);">Props</div>
-    <div class="drow" onclick="closeDrawer(); toggleCatPanel(true);">Skin Care</div>
-    <div class="drow" onclick="closeDrawer(); toggleCatPanel(true);">Smart Watches</div>
-    <div class="drow" onclick="closeDrawer(); toggleCatPanel(true);">Sticker/Card</div>
-    <div class="drow" onclick="closeDrawer(); toggleCatPanel(true);">Towel</div>
-    <div class="drow" onclick="closeDrawer(); toggleCatPanel(true);">Water Bottle</div>
-    <div class="drow" onclick="closeDrawer(); toggleCatPanel(true);">Wristwatches</div>
-    <div class="drow" onclick="closeDrawer(); toggleCatPanel(true);">Hair Care</div>
-    <div class="drow" onclick="closeDrawer(); toggleCatPanel(true);">Household Items</div>
-    <div class="drow" onclick="closeDrawer(); toggleCatPanel(true);">Jewelries</div>
-    <div class="drow" onclick="closeDrawer(); toggleCatPanel(true);">Ringlight</div>
-    <div class="drow" onclick="closeDrawer(); toggleCatPanel(true);">Watches</div>
+    <div class="drow" onclick="closeDrawer(); filterByCategory('Adult Toys');">Adult Toys</div>
+    <div class="drow" onclick="closeDrawer(); filterByCategory('Bag');">Bag</div>
+    <div class="drow" onclick="closeDrawer(); filterByCategory('Body Care');">Body Care</div>
+    <div class="drow" onclick="closeDrawer(); filterByCategory('Children Items');">Children Items</div>
+    <div class="drow" onclick="closeDrawer(); filterByCategory('Clock');">Clock</div>
+    <div class="drow" onclick="closeDrawer(); filterByCategory('Clothes');">Clothes</div>
+    <div class="drow" onclick="closeDrawer(); filterByCategory('Diffuser/Humidifier');">Diffuser/Humidifier</div>
+    <div class="drow" onclick="closeDrawer(); filterByCategory('Gadgets');">Gadgets</div>
+    <div class="drow" onclick="closeDrawer(); filterByCategory('Gift Set');">Gift Set</div>
+    <div class="drow" onclick="closeDrawer(); filterByCategory('Gummies');">Gummies</div>
+    <div class="drow" onclick="closeDrawer(); filterByCategory('Headphone');">Headphone</div>
+    <div class="drow" onclick="closeDrawer(); filterByCategory('Nails');">Nails</div>
+    <div class="drow" onclick="closeDrawer(); filterByCategory('Perfume');">Perfume</div>
+    <div class="drow" onclick="closeDrawer(); filterByCategory('Powerbank');">Powerbank</div>
+    <div class="drow" onclick="closeDrawer(); filterByCategory('Props');">Props</div>
+    <div class="drow" onclick="closeDrawer(); filterByCategory('Skin Care');">Skin Care</div>
+    <div class="drow" onclick="closeDrawer(); filterByCategory('Smart Watches');">Smart Watches</div>
+    <div class="drow" onclick="closeDrawer(); filterByCategory('Sticker/Card');">Sticker/Card</div>
+    <div class="drow" onclick="closeDrawer(); filterByCategory('Towel');">Towel</div>
+    <div class="drow" onclick="closeDrawer(); filterByCategory('Water Bottle');">Water Bottle</div>
+    <div class="drow" onclick="closeDrawer(); filterByCategory('Wristwatches');">Wristwatches</div>
+    <div class="drow" onclick="closeDrawer(); filterByCategory('Hair Care');">Hair Care</div>
+    <div class="drow" onclick="closeDrawer(); filterByCategory('Household Items');">Household Items</div>
+    <div class="drow" onclick="closeDrawer(); filterByCategory('Jewelries');">Jewelries</div>
+    <div class="drow" onclick="closeDrawer(); filterByCategory('Ringlight');">Ringlight</div>
+    <div class="drow" onclick="closeDrawer(); filterByCategory('Watches');">Watches</div>
   </div>
 </aside>
 
@@ -473,7 +505,7 @@
       Close
     </button>
   </div>
-  <div class="cart-body">
+  <div class="cart-body" id="miniCartBody">
     <div class="cart-empty">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
       <h3 class="serif">Your cart is empty</h3>
@@ -481,7 +513,7 @@
     </div>
   </div>
   <div class="cart-foot">
-    <div class="subtotal-row"><span>Subtotal:</span><span>₦0.00</span></div>
+    <div class="subtotal-row"><span>Subtotal:</span><span id="miniCartSubtotal">₦0.00</span></div>
     <button class="cart-cta" onclick="openCartPage()" style="cursor:pointer; color:var(--ink);">VIEW CART</button>
     <button class="cart-cta solid" onclick="openCheckoutPage()" style="opacity:1; cursor:pointer;">CHECKOUT</button>
   </div>
@@ -558,38 +590,38 @@
 </section>
 
 <div class="cat-panel" id="catPanel">
-  <div class="crow">Adult Toys</div>
-  <div class="crow">Bag</div>
-  <div class="crow">Body Care</div>
-  <div class="crow">Children Items</div>
-  <div class="crow">Clock</div>
-  <div class="crow">Clothes</div>
-  <div class="crow">Diffuser/Humidifier</div>
-  <div class="crow">Gadgets</div>
-  <div class="crow">Gift Set</div>
-  <div class="crow">Gummies</div>
-  <div class="crow">Headphone</div>
-  <div class="crow">Nails</div>
-  <div class="crow">Perfume</div>
-  <div class="crow">Powerbank</div>
-  <div class="crow">Props</div>
-  <div class="crow">Skin Care</div>
-  <div class="crow">Smart Watches</div>
-  <div class="crow">Sticker/Card</div>
-  <div class="crow">Towel</div>
-  <div class="crow">Water Bottle</div>
-  <div class="crow">Wristwatches</div>
-  <div class="crow">Hair Care</div>
-  <div class="crow">Household Items</div>
-  <div class="crow">Jewelries</div>
-  <div class="crow">Ringlight</div>
-  <div class="crow">Watches</div>
+  <div class="crow" onclick="filterByCategory('Adult Toys');">Adult Toys</div>
+  <div class="crow" onclick="filterByCategory('Bag');">Bag</div>
+  <div class="crow" onclick="filterByCategory('Body Care');">Body Care</div>
+  <div class="crow" onclick="filterByCategory('Children Items');">Children Items</div>
+  <div class="crow" onclick="filterByCategory('Clock');">Clock</div>
+  <div class="crow" onclick="filterByCategory('Clothes');">Clothes</div>
+  <div class="crow" onclick="filterByCategory('Diffuser/Humidifier');">Diffuser/Humidifier</div>
+  <div class="crow" onclick="filterByCategory('Gadgets');">Gadgets</div>
+  <div class="crow" onclick="filterByCategory('Gift Set');">Gift Set</div>
+  <div class="crow" onclick="filterByCategory('Gummies');">Gummies</div>
+  <div class="crow" onclick="filterByCategory('Headphone');">Headphone</div>
+  <div class="crow" onclick="filterByCategory('Nails');">Nails</div>
+  <div class="crow" onclick="filterByCategory('Perfume');">Perfume</div>
+  <div class="crow" onclick="filterByCategory('Powerbank');">Powerbank</div>
+  <div class="crow" onclick="filterByCategory('Props');">Props</div>
+  <div class="crow" onclick="filterByCategory('Skin Care');">Skin Care</div>
+  <div class="crow" onclick="filterByCategory('Smart Watches');">Smart Watches</div>
+  <div class="crow" onclick="filterByCategory('Sticker/Card');">Sticker/Card</div>
+  <div class="crow" onclick="filterByCategory('Towel');">Towel</div>
+  <div class="crow" onclick="filterByCategory('Water Bottle');">Water Bottle</div>
+  <div class="crow" onclick="filterByCategory('Wristwatches');">Wristwatches</div>
+  <div class="crow" onclick="filterByCategory('Hair Care');">Hair Care</div>
+  <div class="crow" onclick="filterByCategory('Household Items');">Household Items</div>
+  <div class="crow" onclick="filterByCategory('Jewelries');">Jewelries</div>
+  <div class="crow" onclick="filterByCategory('Ringlight');">Ringlight</div>
+  <div class="crow" onclick="filterByCategory('Watches');">Watches</div>
 </div>
 
 <div id="view-shop">
 <div class="meta-row">
-  <span class="crumb"><b>Home</b> / Shop</span>
-  <span>Showing 0 of 0 results</span>
+  <span class="crumb"><b>Home</b> / <span id="shopCrumb">Shop</span></span>
+  <span id="shopCount">Showing 0 of 0 results</span>
 </div>
 <div class="toolbar">
   <button>
@@ -602,13 +634,16 @@
   </button>
 </div>
 
+<div class="product-grid" id="shopGrid" style="display:none;"></div>
+
+<div id="shopEmptyWrap">
 <div class="empty-state">
   <svg class="mark" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4">
     <rect x="8" y="16" width="32" height="24" rx="2"/>
     <path d="M16 16v-3a8 8 0 0 1 16 0v3"/>
   </svg>
-  <h2 class="serif">Nothing on the shelves yet</h2>
-  <p>We're loading up the bazaar with perfumes, bags, shoes, necklaces and accessories. Check back soon, or reach out to ask about something specific.</p>
+  <h2 class="serif" id="shopEmptyTitle">Nothing on the shelves yet</h2>
+  <p id="shopEmptyText">We're loading up the bazaar with perfumes, bags, shoes, necklaces and accessories. Check back soon, or reach out to ask about something specific.</p>
   <a class="wa-link" href="https://wa.me/2348158507875" target="_blank" rel="noopener">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2Zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8 8 0 1 1 12 20Zm4.4-5.9c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.2-.1-1-.4-2-1.2-.7-.6-1.2-1.4-1.4-1.6-.1-.2 0-.4.1-.5l.4-.4c.1-.1.2-.3.2-.4.1-.2 0-.3 0-.5s-.6-1.6-.9-2.1c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.2-1 1-1 2.3 0 1.4 1 2.7 1.1 2.9.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.4-.6 1.6-1.1.2-.5.2-1 .2-1.1-.1-.1-.3-.2-.5-.3Z"/></svg>
     Ask us on WhatsApp
@@ -622,16 +657,19 @@
   <span>108</span><span>109</span><span>110</span>
 </div>
 </div>
+</div>
 
 <div id="view-wishlist">
   <div class="meta-row">
     <span class="crumb"><b>Home</b> / Wishlist</span>
   </div>
-  <div class="wl-empty">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 21s-7-4.5-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6c-2.5 4.5-9.5 9-9.5 9Z"/></svg>
-    <h2 class="serif">This wishlist is empty</h2>
-    <p>You don't have any products in your wishlist yet. Tap the heart on anything you like and it'll show up here.</p>
-    <button class="wl-btn" onclick="showShop()">Return to Shop</button>
+  <div id="wishlistBody">
+    <div class="wl-empty">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 21s-7-4.5-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6c-2.5 4.5-9.5 9-9.5 9Z"/></svg>
+      <h2 class="serif">This wishlist is empty</h2>
+      <p>You don't have any products in your wishlist yet. Tap the heart on anything you like and it'll show up here.</p>
+      <button class="wl-btn" onclick="showShop()">Return to Shop</button>
+    </div>
   </div>
 </div>
 
@@ -725,7 +763,119 @@
     document.getElementById('catPanel').classList.remove('open');
     document.getElementById('nav-shop').classList.remove('active');
     document.getElementById('nav-wishlist').classList.add('active');
+    renderWishlistPage();
   }
+
+  // live products, populated by the Firestore listener in the module script below
+  var allProducts = [];
+  var categoryFilter = null;
+  var wishlist = [];
+
+  function money(n){
+    return '₦' + Number(n).toLocaleString('en-NG', {minimumFractionDigits:2, maximumFractionDigits:2});
+  }
+  function filterByCategory(cat){
+    categoryFilter = cat;
+    showShop();
+    renderShopProducts();
+  }
+  function productCardHTML(p){
+    var inWishlist = wishlist.indexOf(p.id) !== -1;
+    var sold = p.stock === 'sold';
+    return '<div class="pcard">' +
+      (sold ? '<span class="pc-sold">SOLD OUT</span>' : '') +
+      '<button class="pc-heart'+(inWishlist?' active':'')+'" onclick="toggleWishlist(\''+p.id+'\')" aria-label="Wishlist">' +
+        '<svg viewBox="0 0 24 24" fill="'+(inWishlist?'currentColor':'none')+'" stroke="currentColor" stroke-width="1.6"><path d="M12 21s-7-4.5-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6c-2.5 4.5-9.5 9-9.5 9Z"/></svg>' +
+      '</button>' +
+      '<img class="pc-img" src="'+(p.image||'')+'" alt="'+(p.name||'')+'">' +
+      '<div class="pc-body">' +
+        '<div class="pc-name">'+(p.name||'')+'</div>' +
+        '<div class="pc-cat">'+(p.category||'')+'</div>' +
+        '<div class="pc-price">'+money(p.price||0)+'</div>' +
+        '<button class="pc-cart" '+(sold?'disabled':'')+' onclick="addToCart(\''+p.id+'\')">'+(sold?'Sold out':'Add to cart')+'</button>' +
+      '</div></div>';
+  }
+  function renderShopProducts(){
+    var grid = document.getElementById('shopGrid');
+    var emptyWrap = document.getElementById('shopEmptyWrap');
+    var countEl = document.getElementById('shopCount');
+    var crumbEl = document.getElementById('shopCrumb');
+    var list = categoryFilter ? allProducts.filter(function(p){ return p.category === categoryFilter; }) : allProducts;
+
+    crumbEl.textContent = categoryFilter || 'Shop';
+    crumbEl.style.cursor = categoryFilter ? 'pointer' : 'default';
+    crumbEl.onclick = categoryFilter ? function(){ categoryFilter = null; renderShopProducts(); } : null;
+
+    if(list.length === 0){
+      grid.style.display = 'none';
+      emptyWrap.style.display = 'block';
+      countEl.textContent = 'Showing 0 of 0 results';
+      document.getElementById('shopEmptyTitle').textContent = categoryFilter ? ('Nothing in '+categoryFilter+' yet') : 'Nothing on the shelves yet';
+      document.getElementById('shopEmptyText').textContent = categoryFilter ? ('No '+categoryFilter+' products yet — check back soon, or ask us on WhatsApp.') : "We're loading up the bazaar with perfumes, bags, shoes, necklaces and accessories. Check back soon, or reach out to ask about something specific.";
+      return;
+    }
+    emptyWrap.style.display = 'none';
+    grid.style.display = 'grid';
+    countEl.textContent = 'Showing '+list.length+' of '+list.length+' results';
+    grid.innerHTML = list.map(productCardHTML).join('');
+  }
+  function toggleWishlist(id){
+    var idx = wishlist.indexOf(id);
+    if(idx === -1) wishlist.push(id); else wishlist.splice(idx, 1);
+    renderShopProducts();
+    renderWishlistPage();
+  }
+  function renderWishlistPage(){
+    var body = document.getElementById('wishlistBody');
+    var items = allProducts.filter(function(p){ return wishlist.indexOf(p.id) !== -1; });
+    if(items.length === 0){
+      body.innerHTML = '<div class="wl-empty">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 21s-7-4.5-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6c-2.5 4.5-9.5 9-9.5 9Z"/></svg>' +
+        '<h2 class="serif">This wishlist is empty</h2>' +
+        '<p>You don\'t have any products in your wishlist yet. Tap the heart on anything you like and it\'ll show up here.</p>' +
+        '<button class="wl-btn" onclick="showShop()">Return to Shop</button></div>';
+      return;
+    }
+    body.innerHTML = '<div class="product-grid">' + items.map(productCardHTML).join('') + '</div>';
+  }
+  function addToCart(id){
+    var p = allProducts.find(function(x){ return x.id === id; });
+    if(!p || p.stock === 'sold') return;
+    var existing = cart.find(function(c){ return c.id === id; });
+    if(existing){ existing.qty += 1; } else { cart.push({id:id, name:p.name, price:p.price, img:p.image, qty:1}); }
+    updateCartUI();
+  }
+  function renderMiniCart(){
+    var body = document.getElementById('miniCartBody');
+    var subEl = document.getElementById('miniCartSubtotal');
+    if(cart.length === 0){
+      body.innerHTML = '<div class="cart-empty">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>' +
+        '<h3 class="serif">Your cart is empty</h3>' +
+        '<p>Once you add something from the shop, it\'ll show up here ready for checkout.</p></div>';
+      subEl.textContent = money(0);
+      return;
+    }
+    body.innerHTML = cart.map(function(it){
+      return '<div class="cart-line"><img src="'+it.img+'" alt=""><div>' +
+        '<div class="cl-name">'+it.name+'</div><div class="cl-price">'+money(it.price)+'</div>' +
+        '<div class="cl-qty">Qty: '+it.qty+'</div></div></div>';
+    }).join('');
+    subEl.textContent = money(cart.reduce(function(s,i){ return s + i.price*i.qty; }, 0));
+  }
+  function updateCartUI(){
+    var count = cart.reduce(function(s,i){ return s + i.qty; }, 0);
+    document.querySelectorAll('.cart-dot').forEach(function(el){ el.textContent = count; });
+    renderMiniCart();
+    if(document.getElementById('view-cart').style.display === 'block') renderCartPage();
+    if(document.getElementById('view-checkout').style.display === 'block') renderCheckoutPage();
+  }
+  // called by the Firestore listener in the module script whenever products change
+  window.setLiveProducts = function(products){
+    allProducts = products;
+    renderShopProducts();
+    renderWishlistPage();
+  };
 
   // cart state — empty until the admin's products and add-to-cart are wired in;
   // the rendering below is ready to go the moment items exist
@@ -744,9 +894,6 @@
     {label:'Unilag, Shomolu, Gbagada, Bariga, Iyana Ipaja, Dopemu, Oworoshoki, Fagba, Ishashi, Yaba, Oyingbo, Fadeyi, Ikeja, Jibowu, Abule Egba', price:2500},
     {label:'Stockpile (STRICTLY 7 days)', price:0}
   ];
-  function money(n){
-    return '₦' + Number(n).toLocaleString('en-NG', {minimumFractionDigits:2, maximumFractionDigits:2});
-  }
   function shipmentListHTML(nameAttr){
     return shipmentZones.map(function(z, i){
       return '<label class="ship-row"><input type="radio" name="'+nameAttr+'" '+(i===0?'checked':'')+'>' +
@@ -933,7 +1080,7 @@
     createUserWithEmailAndPassword, signOut
   } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
   import {
-    getFirestore, doc, setDoc, serverTimestamp
+    getFirestore, doc, setDoc, serverTimestamp, collection, onSnapshot, query, orderBy
   } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -999,6 +1146,20 @@
 
   onAuthStateChanged(auth, function(user){
     if(typeof window.refreshAccountUI === 'function') window.refreshAccountUI(user);
+  });
+
+  // products the admin adds show up here automatically, live, no refresh needed
+  const productsQuery = query(collection(db, 'products'), orderBy('createdAt', 'desc'));
+  onSnapshot(productsQuery, function(snap){
+    const products = [];
+    snap.forEach(function(docSnap){
+      const d = docSnap.data();
+      products.push({
+        id: docSnap.id, name: d.name, category: d.category,
+        price: d.price, image: d.image, stock: d.stock, description: d.description
+      });
+    });
+    if(typeof window.setLiveProducts === 'function') window.setLiveProducts(products);
   });
 </script>
 </body>
