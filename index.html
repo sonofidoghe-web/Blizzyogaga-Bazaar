@@ -400,6 +400,83 @@
   }
   .cart-toast .ct-text{ color:#fff; font-size:12px; font-weight:600; text-align:center; line-height:1.3; }
 
+  /* support bot — fixed launcher + chat panel, no API, canned answers only */
+  .bot-launcher{
+    position:fixed; right:16px; bottom:76px; z-index:35;
+    display:flex; flex-direction:column; align-items:flex-end; gap:6px;
+  }
+  .bot-label{
+    background:var(--white); color:var(--ink); font-size:11.5px; font-weight:600;
+    padding:7px 12px; border-radius:999px; border:1px solid var(--line);
+    box-shadow:0 4px 14px rgba(0,0,0,.1); white-space:nowrap;
+  }
+  .bot-fab{
+    width:52px; height:52px; border-radius:50%; background:var(--teal); border:none;
+    box-shadow:0 6px 18px rgba(0,0,0,.25); display:flex; align-items:center; justify-content:center;
+    cursor:pointer; color:#fff;
+  }
+  .bot-fab svg{ width:24px; height:24px; }
+
+  .bot-panel{
+    position:fixed; right:14px; bottom:76px; z-index:36; width:min(86vw, 330px); height:min(70vh, 480px);
+    background:var(--white); border-radius:14px; box-shadow:0 14px 40px rgba(0,0,0,.3);
+    display:none; flex-direction:column; overflow:hidden; border:1px solid var(--line);
+  }
+  .bot-panel.open{ display:flex; }
+  .bot-head{
+    background:var(--ink); color:#fff; padding:14px 16px; display:flex; align-items:center; justify-content:space-between;
+  }
+  .bot-head .bh-title{ font-size:13.5px; font-weight:700; }
+  .bot-head .bh-sub{ font-size:10.5px; color:#C9C2B2; }
+  .bot-head button{ background:none; border:none; color:#fff; cursor:pointer; padding:4px; }
+  .bot-body{ flex:1; overflow-y:auto; padding:14px; display:flex; flex-direction:column; gap:10px; background:var(--cream); }
+  .bot-msg{ max-width:82%; font-size:12.5px; line-height:1.5; padding:9px 12px; border-radius:12px; }
+  .bot-msg.bot{ align-self:flex-start; background:var(--white); border:1px solid var(--line); border-bottom-left-radius:3px; }
+  .bot-msg.user{ align-self:flex-end; background:var(--teal); color:#fff; border-bottom-right-radius:3px; }
+  .bot-quick{ display:flex; flex-wrap:wrap; gap:6px; align-self:flex-start; max-width:100%; }
+  .bot-quick button{
+    background:var(--white); border:1px solid var(--gold-deep); color:var(--gold-deep); border-radius:999px;
+    padding:7px 12px; font-size:11.5px; font-weight:600; cursor:pointer;
+  }
+  .bot-quick button.primary{ background:var(--teal); border-color:var(--teal); color:#fff; }
+  .bot-inputrow{ display:flex; gap:8px; padding:10px; border-top:1px solid var(--line); background:var(--white); }
+  .bot-inputrow input{
+    flex:1; border:1px solid var(--line); border-radius:999px; padding:9px 14px; font-size:13px;
+    font-family:inherit; outline:none;
+  }
+  .bot-inputrow button{
+    background:var(--ink); color:#fff; border:none; border-radius:999px; width:36px; height:36px;
+    display:flex; align-items:center; justify-content:center; cursor:pointer; flex:none;
+  }
+
+  /* "our support AI is live" entry popup, shown once on load, auto-dismisses */
+  .ai-intro{
+    position:fixed; top:14px; left:50%; transform:translateX(-50%) translateY(-16px);
+    z-index:50; background:var(--white); border:1px solid var(--line); border-radius:14px;
+    padding:14px 14px 12px; box-shadow:0 16px 36px rgba(0,0,0,.2); width:min(90vw,340px);
+    opacity:0; pointer-events:none; transition:opacity .3s ease, transform .3s ease;
+  }
+  .ai-intro.show{ opacity:1; transform:translateX(-50%) translateY(0); pointer-events:auto; }
+  .ai-intro-top{ display:flex; gap:10px; align-items:flex-start; }
+  .ai-intro-icon{
+    width:38px; height:38px; border-radius:50%; flex:none;
+    background:linear-gradient(135deg, var(--teal), var(--gold-deep));
+    display:flex; align-items:center; justify-content:center;
+  }
+  .ai-intro-icon svg{ width:19px; height:19px; color:#fff; }
+  .ai-intro-body{ flex:1; min-width:0; }
+  .ai-intro-title{ font-family:'Fraunces', serif; font-size:14px; font-weight:600; margin-bottom:3px; }
+  .ai-intro-text{ font-size:11.5px; color:var(--ink-soft); line-height:1.45; }
+  .ai-intro-close{ background:none; border:none; color:var(--ink-soft); cursor:pointer; padding:2px; flex:none; }
+  .ai-intro-actions{ display:flex; gap:8px; margin-top:11px; }
+  .ai-intro-actions button{ font-size:11.5px; font-weight:700; padding:7px 13px; border-radius:999px; cursor:pointer; }
+  .ai-intro-actions .chat-btn{ background:var(--teal); color:#fff; border:none; }
+  .ai-intro-actions .dismiss-btn{ background:none; border:1px solid var(--line); color:var(--ink-soft); }
+  .ai-intro-bar{ height:3px; background:var(--line); border-radius:3px; margin-top:11px; overflow:hidden; }
+  .ai-intro-bar-fill{ height:100%; width:100%; background:var(--gold-deep); transform-origin:left; }
+  .ai-intro.show .ai-intro-bar-fill{ animation:ai-countdown 5s linear forwards; }
+  @keyframes ai-countdown{ from{ width:100%; } to{ width:0%; } }
+
   nav.bottomnav{
     position:fixed; bottom:0; left:0; right:0; z-index:20;
     background:var(--white); border-top:1px solid var(--line);
@@ -735,6 +812,52 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
   </div>
   <div class="ct-text" id="ctText"></div>
+</div>
+
+<div class="ai-intro" id="aiIntro">
+  <div class="ai-intro-top">
+    <div class="ai-intro-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5Z"/></svg>
+    </div>
+    <div class="ai-intro-body">
+      <div class="ai-intro-title">Our support AI is now live</div>
+      <div class="ai-intro-text">Need help? Chat with our AI assistant anytime — and if you need more, our team is one tap away.</div>
+    </div>
+    <button class="ai-intro-close" onclick="closeAiIntro()" aria-label="Dismiss">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/></svg>
+    </button>
+  </div>
+  <div class="ai-intro-actions">
+    <button class="chat-btn" onclick="closeAiIntro(); openBot();">Chat now</button>
+    <button class="dismiss-btn" onclick="closeAiIntro()">Cancel</button>
+  </div>
+  <div class="ai-intro-bar"><div class="ai-intro-bar-fill"></div></div>
+</div>
+
+<div class="bot-launcher" id="botLauncher">
+  <div class="bot-label" id="botLabel">Chat with our AI support here</div>
+  <button class="bot-fab" onclick="openBot()" aria-label="Chat with support">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5Z"/></svg>
+  </button>
+</div>
+
+<div class="bot-panel" id="botPanel">
+  <div class="bot-head">
+    <div>
+      <div class="bh-title">Blizzyogaga Support</div>
+      <div class="bh-sub">Usually replies instantly</div>
+    </div>
+    <button onclick="closeBot()" aria-label="Close chat">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/></svg>
+    </button>
+  </div>
+  <div class="bot-body" id="botBody"></div>
+  <div class="bot-inputrow">
+    <input id="botInput" type="text" placeholder="Type a message…" onkeydown="if(event.key==='Enter') sendBotMessage();">
+    <button onclick="sendBotMessage()" aria-label="Send">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    </button>
+  </div>
 </div>
 
 <nav class="bottomnav">
@@ -1115,6 +1238,123 @@
     document.getElementById('tab-cat').classList.toggle('active', open);
     document.getElementById('tab-shop').classList.toggle('active', !open);
   }
+
+  /* ---------- support bot: rule-based only, no API ---------- */
+  var botOpened = false;
+  var botMenu = [
+    {label:'Delivery & shipping', reply:"Delivery within Lagos takes 12–48 hours depending on location, and outside Lagos takes 2–5 days. You can also stockpile with us for up to two weeks and arrange pickup or delivery."},
+    {label:'How to order', reply:"Browse the shop or pick a category, add what you like to your cart, then go to checkout and fill in your details. At the end you'll confirm your order with us on WhatsApp, where we'll confirm your delivery price."},
+    {label:'Payment', reply:"Once you confirm your order on WhatsApp, we'll share payment details there and take your payment directly — nothing to pay on the site itself."},
+    {label:'Returns', reply:"If something arrives wrong or damaged, message us on WhatsApp with your order details and we'll sort it out with you."},
+    {label:'Store hours', reply:"We're open Monday to Saturday, 9am – 5pm."},
+    {label:'Chat with a real person', action:'whatsapp'}
+  ];
+  function botAddMsg(text, who){
+    var body = document.getElementById('botBody');
+    var el = document.createElement('div');
+    el.className = 'bot-msg ' + (who || 'bot');
+    el.textContent = text;
+    body.appendChild(el);
+    body.scrollTop = body.scrollHeight;
+  }
+  function botAddQuickReplies(){
+    var body = document.getElementById('botBody');
+    var wrap = document.createElement('div');
+    wrap.className = 'bot-quick';
+    botMenu.forEach(function(item){
+      var b = document.createElement('button');
+      b.textContent = item.label;
+      if(item.action === 'whatsapp') b.className = 'primary';
+      b.onclick = function(){ botHandleChoice(item); };
+      wrap.appendChild(b);
+    });
+    body.appendChild(wrap);
+    body.scrollTop = body.scrollHeight;
+  }
+  function botHandleChoice(item){
+    botAddMsg(item.label, 'user');
+    if(item.action === 'whatsapp'){
+      botAddMsg("Opening WhatsApp so you can chat with our team directly.", 'bot');
+      window.open('https://wa.me/2348158507875?text=' + encodeURIComponent('Hi, I need some help.'), '_blank');
+      return;
+    }
+    botAddMsg(item.reply, 'bot');
+    setTimeout(function(){
+      botAddMsg("Anything else I can help with?", 'bot');
+      botAddQuickReplies();
+    }, 400);
+  }
+  function openBot(){
+    document.getElementById('botPanel').classList.add('open');
+    document.getElementById('botLauncher').style.display = 'none';
+    if(!botOpened){
+      botOpened = true;
+      botAddMsg("Hello! How can we help you today? Choose from the options below, or type your question.", 'bot');
+      botAddQuickReplies();
+    }
+  }
+  function closeBot(){
+    document.getElementById('botPanel').classList.remove('open');
+    document.getElementById('botLauncher').style.display = 'flex';
+  }
+  function botReplyToText(raw){
+    var text = raw.toLowerCase();
+    if(/\b(hi|hello|hey|good morning|good afternoon|good evening)\b/.test(text)){
+      botAddMsg("Hello! How can we help you today? Choose from the options below, or type your question.", 'bot');
+      botAddQuickReplies();
+      return;
+    }
+    if(/(deliver|shipping|ship|stockpile)/.test(text)){
+      botAddMsg(botMenu[0].reply, 'bot'); botAddQuickReplies(); return;
+    }
+    if(/(order|cart|checkout|buy)/.test(text)){
+      botAddMsg(botMenu[1].reply, 'bot'); botAddQuickReplies(); return;
+    }
+    if(/(pay|payment|price|cost)/.test(text)){
+      botAddMsg(botMenu[2].reply, 'bot'); botAddQuickReplies(); return;
+    }
+    if(/(return|refund|damage|wrong item)/.test(text)){
+      botAddMsg(botMenu[3].reply, 'bot'); botAddQuickReplies(); return;
+    }
+    if(/(hour|open|close|time)/.test(text)){
+      botAddMsg(botMenu[4].reply, 'bot'); botAddQuickReplies(); return;
+    }
+    if(/(agent|human|person|admin|real person|speak to someone)/.test(text)){
+      botHandleChoice(botMenu[5]);
+      return;
+    }
+    botAddMsg("I'm not totally sure about that one — chat with our admin on WhatsApp and they'll help you directly.", 'bot');
+    var wrap = document.createElement('div');
+    wrap.className = 'bot-quick';
+    var b = document.createElement('button');
+    b.className = 'primary';
+    b.textContent = 'Chat with a real person';
+    b.onclick = function(){ botHandleChoice(botMenu[5]); };
+    wrap.appendChild(b);
+    document.getElementById('botBody').appendChild(wrap);
+    document.getElementById('botBody').scrollTop = document.getElementById('botBody').scrollHeight;
+  }
+  function sendBotMessage(){
+    var input = document.getElementById('botInput');
+    var val = input.value.trim();
+    if(!val) return;
+    botAddMsg(val, 'user');
+    input.value = '';
+    setTimeout(function(){ botReplyToText(val); }, 300);
+  }
+
+  /* "our support AI is live" intro — shows shortly after the page loads, auto-dismisses in 5s */
+  var aiIntroTimer = null;
+  function closeAiIntro(){
+    var el = document.getElementById('aiIntro');
+    el.classList.remove('show');
+    if(aiIntroTimer){ clearTimeout(aiIntroTimer); aiIntroTimer = null; }
+  }
+  function showAiIntro(){
+    document.getElementById('aiIntro').classList.add('show');
+    aiIntroTimer = setTimeout(closeAiIntro, 5000);
+  }
+  window.addEventListener('load', function(){ setTimeout(showAiIntro, 900); });
 </script>
 
 <script type="module">
